@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, request, jsonify, url_for
 from flask_login import LoginManager
 from flask_login import login_user, login_required, logout_user
 from werkzeug.exceptions import HTTPException
+import logging
 
 from api.jobs_api import get_jobs
 from api.jobs_api import jobs_bp
@@ -17,6 +18,15 @@ from data.users import User
 
 from flask_restful import Api
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("app.log"),  # Запись в файл
+        logging.StreamHandler()  # Вывод в консоль (если сервер позволяет)
+    ]
+)
+
 app = Flask(__name__)
 app.register_blueprint(jobs_bp, url_prefix='/api')
 app.register_blueprint(users_bp, url_prefix='/api')
@@ -26,7 +36,6 @@ api_version2.add_resource(JobsListResource, '/api/v2/jobs')
 api_version2.add_resource(JobsResource, '/api/v2/jobs/<int:job_id>')
 api_version2.add_resource(UsersListResource, '/api/v2/users')
 api_version2.add_resource(UsersResource, '/api/v2/users/<int:user_id>')
-
 
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
@@ -121,7 +130,7 @@ def edit_user(user_id):
         response = requests.get(f'{API_SERVER}/users/{user_id}')
         if response.status_code != 200:
             return render_template('register.html', title="Редактирование пользователя", form=form,
-                                   message='Пользователь не найден!',  edit=True)
+                                   message='Пользователь не найден!', edit=True)
         user_data = response.json()
         form = RegisterForm(data=user_data, is_editing=True)
     if request.method == 'POST' and form.validate_on_submit():
@@ -183,7 +192,9 @@ def handle_generic_exception(error):
 
 
 def main():
-    print('Hello from flask!')
+    logging.debug("Инициализация БД...")
+    conn_str = "db/mars.db"
+    logging.info("Подключение к базе данных по адресу %s", conn_str)
     db_session.global_init('db/mars.db')
     app.run(host='0.0.0.0')
 

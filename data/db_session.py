@@ -1,3 +1,5 @@
+import logging
+
 import sqlalchemy as sa
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
@@ -17,7 +19,7 @@ def global_init(db_file):
 
     try:
         conn_str = f'sqlite:///{db_file.strip()}?check_same_thread=False'
-        print(f"Подключение к БД: {conn_str}")
+        logging.info(f"Подключение к БД: {conn_str}")
         engine = sa.create_engine(conn_str, echo=False)
         __factory = orm.sessionmaker(bind=engine)
 
@@ -26,7 +28,7 @@ def global_init(db_file):
 
         SqlAlchemyBase.metadata.create_all(engine)
     except Exception as e:
-        print(f"Ошибка инициализации БД: {e}")
+        logging.info(f"Ошибка инициализации БД: {e}")
         raise
 
 
