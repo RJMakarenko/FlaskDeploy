@@ -192,9 +192,6 @@ def handle_generic_exception(error):
 
 
 def main():
-    logging.debug("Инициализация БД...")
-    conn_str = "db/mars.db"
-    logging.info("Подключение к базе данных по адресу %s", conn_str)
     db_session.global_init('db/mars.db')
     app.run(host='0.0.0.0')
 

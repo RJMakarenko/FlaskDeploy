@@ -18,7 +18,7 @@ def global_init(db_file):
         raise Exception("Не указан файл БД.")
 
     try:
-        conn_str = f'sqlite:///{db_file.strip()}?check_same_thread=False'
+        conn_str = f'sqlite:///db/mars.db?check_same_thread=False'
         logging.info(f"Подключение к БД: {conn_str}")
         engine = sa.create_engine(conn_str, echo=False)
         __factory = orm.sessionmaker(bind=engine)
