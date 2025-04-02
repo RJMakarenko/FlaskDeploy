@@ -111,7 +111,7 @@ def register():
             'password': form.password.data,
             'repeat_password': form.repeat_password.data,
         }
-        response = requests.post(f'{API_SERVER}/users', json=user_data)
+        response = requests.post(f'https://localhost/api/users', json=user_data)
         if response.status_code == 201:
             return redirect('/login')
 
