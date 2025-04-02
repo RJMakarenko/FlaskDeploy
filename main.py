@@ -184,7 +184,7 @@ def handle_generic_exception(error):
 
 def main():
     db_session.global_init('db/mars.db')
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
 
 
 if __name__ == '__main__':
