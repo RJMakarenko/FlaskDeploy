@@ -8,14 +8,26 @@ from api.jobs_api import get_jobs
 from api.jobs_api import jobs_bp
 from api.users_api import get_users
 from api.users_api import users_bp
+from api_v2.jobs_api_v2 import JobsListResource, JobsResource
+from api_v2.users_api_v2 import UsersListResource, UsersResource
 from data import db_session
 from data.login_form import LoginForm
 from data.register_form import RegisterForm
 from data.users import User
 
+from flask_restful import Api
+
 app = Flask(__name__)
 app.register_blueprint(jobs_bp, url_prefix='/api')
 app.register_blueprint(users_bp, url_prefix='/api')
+
+api_version2 = Api(app)
+api_version2.add_resource(JobsListResource, '/api/v2/jobs')
+api_version2.add_resource(JobsResource, '/api/v2/jobs/<int:job_id>')
+api_version2.add_resource(UsersListResource, '/api/v2/users')
+api_version2.add_resource(UsersResource, '/api/v2/users/<int:user_id>')
+
+
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
